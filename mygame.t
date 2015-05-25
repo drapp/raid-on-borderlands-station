@@ -77,7 +77,7 @@ roomDescVerbose = nil
 ;
 
 hull: OutdoorRoom 'Hull'
-    "You're on a patch of hull on the side of the space station" 
+    "You're on the hull on the side of the space station" 
     
     down = startRoom
     cannotGoThatWayMsg = 'No sense wandering off, this station is enormous and you only have so much oxygen\b'
@@ -85,12 +85,20 @@ roomDescVerbose = nil
 ;
 
 + loosePatch: ComplexContainer 'small steel hull plate patch' 
-    'loose hull patch'
+    'loose hull patch sticking out'
     "This bit of hull is loose, it doesn't seem to be essential for station integrity"
     subContainer: ComplexComponent, Container { bulkCapacity = 3}
     subUnderside: ComplexComponent, Underside { }
     dobjFor(Search) asDobjFor(Take)
     dobjFor(Pull) asDobjFor(Take)
+    dobjFor(Open) asDobjFor(Take)
+
+	actionDobjTake()  
+	{  
+      "The hull patch breaks away. ";
+      inherited;
+    }
+      
     
     bulk = 3
     bulkCapacity = 3
@@ -114,12 +122,13 @@ roomDescVerbose = nil
     isPlural = true
 ;
 
-terminal : Person 'terminal' 'terminal'
+terminal : Actor 'terminal' 'terminal'
   @airlock
   "A terminal screen with a speaker"
   properName = 'Terminal' 
   globalParamName = 'terminal'
   isIt = true
+  initSpecialDesc = "A terminal sits on one wall. You should talk to it"
 ; 
 
 + ConvNode 'password-input'; 
