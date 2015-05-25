@@ -1,0 +1,7 @@
+-DLANGUAGE=en_us
+-DMESSAGESTYLE=neu
+-Fy obj -Fo obj
+-o mygame.t3
+-lib system
+-lib adv3/adv3
+-source mygame
