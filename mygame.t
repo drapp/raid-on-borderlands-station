@@ -95,8 +95,9 @@ roomDescVerbose = nil
 
 	actionDobjTake()  
 	{  
-      "The hull patch breaks away. ";
+      "It breaks off in your hand. ";
       inherited;
+      "Never underestimate people's laziness when it comes to security. ";
     }
       
     
@@ -134,8 +135,8 @@ terminal : Actor 'terminal' 'terminal'
 + ConvNode 'password-input'; 
 
 ++ SpecialTopic
-  name = 'say the password'
-  keywordList = ['hotdogs']
+  name = 'say the passphrase'
+  keywordList = ['the', 'humans', 'are', 'prey']
   topicResponse {
       "PASSWORD ACCEPTED. DOOR UNLOCKED";
       airlockInnerDoor.makeLocked(nil);
@@ -156,6 +157,11 @@ terminal : Actor 'terminal' 'terminal'
 
 +++ HelloTopic, StopEventList
   [
+    'A PASSPHRASE IS REQUIRED. \b
+     14-10-16\b
+     30-5-65\b
+     39-4-38\b
+     31-7-12\b<.convnode password-input>',
     'PLEASE GIVE THE PASSWORD <.convnode password-input>'
   ]
 ;
@@ -164,6 +170,19 @@ airlock: Room 'Airlock'
     "You are in the airlock, which is at the southern edge of the station according to local geography. The walls are boring and metalic, with pump nozzels in the corners to pump air in and out. "
     
     north = airlockInnerDoor
+;
+
++ corpse:Fixture, Container 'dead desicated corpse' 'corpse'
+    "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror "
+  initSpecialDesc = "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror. You're momentarily startled, but you expected this, and at least it's not gruesome. You don't see any obvious cause of death"
+;
+
+++ catster: Hidden 'catster magazine' 'copy of Catster Magazine from Spring 2015'
+ actionDobjTake()      
+{
+    inherited;
+    "Strange that he would have such an ancient artifact. This magazine looks terrible, a rare phystical remnant from the BuzzFeed cultural black hole of the early 21st century";
+}
 ;
 
 + airlockDoorInside : Lockable, Door -> airlockDoor 'door' 'door'; 
@@ -186,84 +205,18 @@ airlock: Room 'Airlock'
     "It's a steel airlock door"
 ;
 
-+ table:Surface 'small wooden mahogany side table/legs*tables' 'small table'
-    "It's a small mahogany table standing on four thin legs. "
-    initSpecialDesc = "A small table rests by the east wall. "  
-    bulk = 5
-    
-    dobjFor(Take)
-    {
-        check()
-        {
-            if(contents.length > 0)
-                failCheck('It\'s probably not a very good idea to try picking
-                    up the table while <<contents[1].nameIs>> still on it. ');
-        }
-    }
-;
-
-++ vase: Container 'cheap china floral vase/pattern' 'vase'
-    "It's only a cheap thing, made of china but painted in a tasteless floral
-    pattern using far too many primary colours. "    
-
-    bulk = 3
-    bulkCapacity = 3
-;
-
-+++ silverKey: Hidden, Key 'small silver key*keys' 'small silver key'
-;
-
-study: Room 'Study'
-    "This study is much as you would expect: somewhat spartan. A desk stands in
+atrium: DarkRoom 'Study'
+    "This atrium is much as you would expect: somewhat spartan. A desk stands in
     the middle of the room with a chair placed just behind it. A <<if
       picture.moved>>safe is built into <<else>> rather bland painting hangs on
     <<end>> the west wall. The way out is to the east. "
     south = airlockInnerDoorInside
     out asExit(south)
+    roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were elimiated during the imperial succession war a century prior, or you'd be worried right now.<.p>
+Your suit totally has a light on it, but for some reason, you're blanking on the voice command to activate it. Instead all you can think about is this weird puzzle labeled #2. ";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
 
-+ desk: Heavy, Platform 'plain wooden desk' 'desk'
-    "It's a plain wooden desk with a single drawer. "    
-    dobjFor(Open) remapTo(Open, drawer)
-    dobjFor(Close) remapTo(Close, drawer)
-    dobjFor(LookIn) remapTo(LookIn, drawer)
-    dobjFor(UnlockWith) remapTo(UnlockWith, drawer, IndirectObject)
-    dobjFor(LockWith) remapTo(LockWith, drawer, IndirectObject)
-    dobjFor(Lock) remapTo(Lock, drawer)
-    dobjFor(Unlock) remapTo(Unlock, drawer)
-;
-
-++ drawer: KeyedContainer, Component '(desk) drawer*drawers' 'drawer'
-    "It's an ordinary desk drawer with a small silver lock. "
-    keyList = [silverKey]
-;
-
-+++ notebook: Readable 'small bright red notebook/book/cover/pages' 
-    'small red notebook'
-    "It's a small notebook with a bright red cover. "
-    
-    readDesc = "You open the notebook and flick through its pages. The only
-        thing you find of any interest is a page with <q>SAFE DATE</q> scrawled
-        across it. After satisfying yourself that the notebook contains nothing
-        else of any potential relevance you snap it shut again. <.reveal
-        safe-date>"
-    
-    dobjFor(Open) asDobjFor(Read)
-    dobjFor(LookIn) asDobjFor(Read)
-    
-    dobjFor(Read)
-    {
-        action()
-        {
-            inherited;
-            achievement.awardPointsOnce();
-        }
-    }
-    
-    cannotCloseMsg = 'It\'s already closed. '
-    achievement: Achievement { +5 "reading the notebook" }
-;
 
 + CustomImmovable, Chair 'red office swivel chair' 'chair'
     "It's a typical office swivel chair, covered in red fabric. "
@@ -443,107 +396,24 @@ modify Thing
 
 //------------------------------------------------------------------------------
 
-/* HINTS */
-
-TopHintMenu;
-
-+ Goal -> (airlockDoor.achievement)
-    'How do I get into the house?'
-    [
-        'Well, the windows don\'t seem a good way in. ',
-        'So perhaps you\'d better try the front door. ',
-        'Could someone have left a key around somewhere? ',
-        'Is there anything lying around where someone could have hidden a key? ',
-        'What about that flowerpot? ',
-        'Try looking under the flowerpot. '
-    ]
-    
-    goalState = OpenGoal
+DefineIAction(FiatLux)
+ execAction
+{
+  if(gPlayerChar.brightness == 0)
+  {
+    "Your suit light switches on and you can see again\n";
+    gPlayerChar.brightness = 3;
+  }
+  else
+  {
+    "You switch your suit light on. ";
+    gPlayerChar.brightness = 0;
+  }
+}
 ;
 
-/* The closeWhenSeen property of the following Goal object is an example of how to
-   make your hint menu respond dynamically to the player's current situation. */
-    
-+ Goal 'Where can I find the orb? '
-    [
-        'Something like that is bound to be kept safe. ',
-        'So it\'s probably inside the house. '              
-    ]
-    
-    goalState = OpenGoal
-    closeWhenSeen = airlock
-;
-
-+ Goal 'Where can I find the orb?'
-    [
-        'It\'s sure to be kept somewhere safe. ',
-        'You\'d better hunt around. ',
-        'Somewhere in the study seems the most likely place. ',
-        deskHint,
-        'But it should be safely locked in a safe ',
-        'Where might someone hide a safe in this study? ',
-        'What could be behind that picture on the wall? ',
-        'Try looking behind the picture (or simply taking the picture). '
-    ]
-    
-    openWhenSeen = airlock
-    closeWhenSeen = orb
-;
-
-++ deskHint: Hint 'Have you tried looking in the desk drawer? '
-    [deskGoal]
-;
-
-+ deskGoal: Goal 'How do I get the desk drawer open?'
-    [
-        'Have you examined the drawer? ',
-        'What might you need to unlock it? ',
-        'Where might you find such a thing? ',
-        'What have you seen that a small key might be hidden in? ',
-        'How carefully have you searched the hall? ',
-        'What is (or was) on the hall table? ',
-        'What might that vase be for? ',
-        'Try looking in the vase. '
-    ]
-    closeWhenSeen = notebook
-;
-
-+ Goal 'How do I get the safe open?'
-    [
-        'How carefully have you examined the safe? ',
-        'Where might someone leave a clue to the combination? ',
-        deskHint,
-        'Make sure you read the notebook. ',
-        'Once you\'ve found the combination you need to use the dial. ',
-        'If the combination is a number larger than 99 you\'ll need to enter it
-        in stages. ',
-        'For example, if the combination were 1234 you\'d first need to turn the
-        dial to 12 and then turn it to 34. '
-    ]
-    
-    openWhenSeen = safe
-    closeWhenAchieved = (safe.subContainer.achievement)
-;
-
-+ Goal 'What does the clue in the notebook mean?'
-    [
-        'Well, <q>SAFE</q> might refer to something you want to open. ',
-        'Have you seen a date round here? ',
-        'When was this house built? ',
-        'Where might you find the year in which this house was built? ',
-        'How carefully have you looked at the front of the house? ',
-        'Did you examine the door? '
-    ]
-    
-    openWhenRevealed = 'safe-date'
-    closeWhenAchieved = (safe.subContainer.achievement)
-;
-
-
-+ Goal 'What do I do with the orb now I\'ve got it?'
-    [
-        'Well, you could try rubbing it. ',
-        'But the main thing to do now is to escape with it. '
-    ]
-    openWhenSeen = orb
-;
+VerbRule(FiatLux)
+  'fiat' 'lux'
+  : FiatLuxAction
+  verbPhrase = 'make/making light'
+; 
