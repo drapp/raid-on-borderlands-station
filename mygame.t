@@ -201,6 +201,7 @@ habitable. Just bodies everywhere. You put the mystery out of your head and try
 to focus on the room itself.<.p>
 If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
     south = airlockInnerDoorInside
+    east = bay
     out asExit(south)
     roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
 elimiated during the imperial succession war a century prior, or you'd be
@@ -323,12 +324,72 @@ jigsaw puzzle.";}
     }
 ;
 
-++ muonTransfusor: Thing 'muon transfuser'
-    'muon transfuser'
+++ muonTransfusor: Thing 'muon transfuser' 'muon transfuser'
     "the solution to all your muon transfusing needs"
 
     subLocation = &subContainer
 ;
+
+android : Person 'sad android' 'android'
+  @bay
+  "A humanoid robot with an outsized head, conical hat protrusion, and a permanently sad expression. "
+  properName = 'Sad Android' 
+  globalParamName = 'android'
+  isHim = true
+; 
+
++ ConvNode 'heart'; 
+
+++ SpecialTopic
+  name = 'remind him of his heart'
+  keywordList = ['companion', 'cube']
+  topicResponse {
+      "<q>Yes, of course, the weighted companion cube, I loved that bit from Portal!</q> the robot exclaims, his permanently sad expression taking on a wistful cast. <q>Here, you should have this</q>. He takes a companion cube out of his chest and places it on the floor. ";
+   companionCube.discover();
+  }
+; 
+
++ DefaultGiveShowTopic, ShuffledEventList
+  [
+    '<q>That won\'t fill the void</q> intones the robot<.convnode heart>',
+    '<q>I think you ought to know I\'m feeling very depressed.</q><.convnode heart>',
+    '<q>What is this cupped cake?</q> says the robot in a German accent for some reason<.convnode heart>',
+    '<q>Thanks for noticing me</q> drones the robot in a gloomy voice.<.convnode heart>'
+  ]
+; 
+
+
++ androidTalking : InConversationState
+  stateDesc = "He seems to be paying attention to you, maybe" 
+  specialDesc = "{The android/he} might be talking to you, or he might not. "
+;
+
+++ androidBeingSad : ConversationReadyState
+  stateDesc = "He's busy being sad"
+  specialDesc = "<<a++ ? '{The android/he}' : '{An android/he}'>> 
+  is standing near a space ship just generally being sad"
+  isInitState = true
+  a = 0
+;
+
++++ HelloTopic, StopEventList
+  [
+    'You cautiously approach the android, who doesn\'t react to you. <q>Hey!</q> you bark out. <q>What is your status? What happened here?</q><.p>
+     The android\'s eyes flick up at you briefly, then sag back down <q>I seem to have lost my heart. I can\'t even remember what it was. I think I may have locked it away in a box</q><.convnode heart>',
+    '<q>Dammit robot, answer me!</q> you shout.<.p>
+     <q>Without my heart, it\'s all meaningless</q> {the android/he} sobs.<.convnode heart> '
+  ]
+; 
+
+bay: Room 'Ship Bay'
+  "The ship bay is fairly small, containing three corvette-class ships and a dozen or so shuttles."
+
+  west = atrium
+;
+
++ companionCube : Chair, Hidden 'weighted companion cube' 'companion cube'
+  "It's just a regular old cube with hearts painted on the side"
+; 
 
 //------------------------------------------------------------------------------
 
