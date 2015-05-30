@@ -440,6 +440,7 @@ end: Room 'Control Center'
 
 We are the galactic puzzle council. We have grown tired of artfully working puzzles into your adventure, so we have brought you here to face your final tests"
   solved = 0
+  puzzleCount = 3
   win {
     "</p> The robots turn to you and say in chorus <q>You have triumphed over every obstacle we set in front of you</q> intones the chorus of robots. <q>We destroyed the inhabitants of this station when they were unable to solve our arbitrary logic puzzles, and we were about to wipe out the rest of humanity. Those without puzzling abilities do not deserve to live, and our puzzle robot clan has vowed to exterminate the unworthy. You have restored our faith in the human race as a puzzling species with your mighty deeds, and so we will leave you in peace to improve your logical reasoning abilities. Now we must go, may you puzzle and propagate!</q>
 
@@ -467,6 +468,10 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
   isHim = true
 ; 
 
+++ AskTopic @weirdo
+   "Don't mine him, he's just grumpy that everyone forgot his character."
+; 
+
 ++ ConvNode 'supermanpuzzle'; 
 
 +++ SpecialTopic
@@ -475,7 +480,7 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
   topicResponse {
       "Indeed, my heart rages like a volcano! ";
     end.solved++;
-    if(end.solved == 2) end.win();
+    if(end.solved == end.puzzleCount) end.win();
   }
 ; 
 
@@ -498,12 +503,15 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
 
 // bug weirdo
 
-+ bug : Person 'bug batman weirdo' 'weirdo'
-  "An unusual robot dressed in black and grey. It's got two little tufts on its head, and kind of looks like a bug or something, and it has an emblem on its chest that might be a bug or something. If this is some figure from ancient earth, its name has be lost in the mists of time. You decide to call it Bug Wierdo"
++ weirdo : Person 'bug batman weirdo' 'weirdo'
+  "An unusual robot dressed in black and grey. It's got two little tufts on its head, and kind of looks like a bug or something, and it has an emblem on its chest that might be a moth. If this is some figure from ancient earth, its name has be lost in the mists of time. You decide to call it Bug Wierdo"
   properName = 'Bug Weirdo' 
   globalParamName = 'weirdo'
   specialDesc = "An unusual robot dressed in black and grey leans in a corner looking sulky. It's got two little tufts on its head, and kind of looks like a bug or something. If this is some figure from ancient earth, its name has be lost in the mists of time. You decide to call it bug wierdo"
   isHim = true
+; 
+++ AskTopic @superman
+   "Smug bastard, he's not the night."
 ; 
 
 ++ ConvNode 'weirdopuzzle'; 
@@ -514,7 +522,7 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
   topicResponse {
       "No, I'm a bat, I am the night! But that is the answer";
     end.solved++;
-    if(end.solved == 2) end.win();
+    if(end.solved == end.puzzleCount) end.win();
   }
 ; 
 
@@ -525,7 +533,7 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
 
 +++ weirdoIdle : ConversationReadyState
   stateDesc = "He's busy being sad"
-  specialDesc = "He makes a brodyface"
+  specialDesc = "He makes a broodyface"
   isInitState = true
   a = 0
 ;
@@ -537,7 +545,48 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
   ]
 ; 
 
-//X ZCSA BLGO ZCO JKSO. OGOJAZCO WXVBRN, CZ ZCO FKXRN. AZK EZC'R EZ AZKJ QZI; X'SS NBZZR AZK. AZK VOR DO? TOSYZDO RZ RBO JZKVBCOYPN.
+// space marine
+
++ spaceMarine : Person 'space marine' 'space marine'
+  "A robot dressed, rather redundantly, in power armor."
+  properName = 'Space Marine' 
+  globalParamName = 'marine'
+  specialDesc = "To your right stands a robot dressed, rather redundantly, in power armor. It's looking gruff."
+  isHim = true
+; 
+++ AskTopic @superman
+   "That soft human doesn't even have power armor"
+; 
+
+++ ConvNode 'marinepuzzle'; 
+
++++ SpecialTopic
+  name = 'say what his favorite movie is'
+  keywordList = ['starship', 'troopers']
+  topicResponse {
+      "Come on, you damned dirty apes! Do you wanna live forever?";
+    end.solved++;
+    if(end.solved == end.puzzleCount) end.win();
+  }
+; 
+
+++ marinePuzzling : InConversationState
+  stateDesc = "Give him the puzzle answer" 
+  specialDesc = "Bug marine is talking to you"
+;
+
++++ marineIdle : ConversationReadyState
+  stateDesc = "He's busy being sad"
+  specialDesc = "He makes a broodyface"
+  isInitState = true
+;
+
+++++ HelloTopic, StopEventList
+  [
+    'X ZCSA BLGO ZCO JKSO. OGOJAZCO WXVBRN, CZ ZCO FKXRN. AZK EZC\'R EZ AZKJ QZI; X\'SS NBZZR AZK. AZK VOR DO? TOSYZDO RZ RBO JZKVBCOYPN. <.convnode marinepuzzle>'
+  ]
+; 
+
 //------------------------------------------------------------------------------
 
 DefineIAction(FiatLux)
