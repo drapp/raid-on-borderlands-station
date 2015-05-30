@@ -163,14 +163,6 @@ airlock: Room 'Airlock'
     
     north = airlockInnerDoor
 ;
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
-;
-
 
 + corpse:Fixture, Container 'dead desicated corpse' 'corpse'
     "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror "
@@ -207,11 +199,20 @@ up to the task. It makes no sense, there's no sign of a riot, a war, or
 depressurization. If not for the smell this room would probably still be
 habitable. Just bodies everywhere. You put the mystery out of your head and try
 to focus on the room itself.<.p>
-If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
+If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station. There's an air vent in the ceiling, but now that the station artificial gravity has take ahold of you, you can't just float up to it. "
     south = airlockInnerDoorInside
     east = bay
     west = eatery
     out asExit(south)
+    up : TravelMessage 
+{  ->end
+    "Standing on the companion cube you manage to haul yourself into an airshaft"
+        canTravelerPass(traveler) 
+        { return traveler.isIn(companionCube) && traveler.posture==standing; }
+    explainTravelBarrier(traveler) 
+    { "You're a few inches short of grabbing the edge of the airshaft, even when jumping. "; } 
+}      
+  north : FakeConnector {"It's not only locked, but it seems to be welded shut. "} 
     roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
 elimiated during the imperial succession war a century prior, or you'd be
 worried right now.<.p> Your suit totally has a light on it, but for some
@@ -221,6 +222,14 @@ words are there in your head, but they're all scrambled up like some sort of
 jigsaw puzzle.";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
+
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
     "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
@@ -421,7 +430,9 @@ robot : Person, Hidden 'antsy robot' 'robot'
 
 
 eatery: DarkRoom 'Eatery'
-  "<<if robot.discovered>> You can see it's an eatery, but you can't make out any details. <<else>> This would have been a fairly seedy dive commisary at one point. In stark contrast to the workmanlike metal interiors of the rest of the staion, this place feature fake wood panelling, fake windows, and fake old timey charm. <<end>>"
+  "<<if robot.discovered>> You can see it's an eatery, but you can't make out any details. <<else>> This would have been a fairly seedy dive commisary at one point. In stark contrast to the workmanlike metal interiors of the rest of the staion, this place feature fake wood panelling, fake windows, and fake old timey charm. <.p>
+
+The bathroom door is on the north wall. <<end>>"
 
   east = atrium
 ;
@@ -431,6 +442,10 @@ eatery: DarkRoom 'Eatery'
     
     notImportantMsg = 'I don\'t think you want to go in there, it sounds like bad things are happening'
     isHidden = true
+;
+end: DarkRoom 'The end'
+  "This is the end"
+  east = atrium
 ;
 
 //X ZCSA BLGO ZCO JKSO. OGOJAZCO WXVBRN, CZ ZCO FKXRN. AZK EZC'R EZ AZKJ QZI; X'SS NBZZR AZK. AZK VOR DO? TOSYZDO RZ RBO JZKVBCOYPN.
