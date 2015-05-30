@@ -222,14 +222,6 @@ words are there in your head, but they're all scrambled up like some sort of
 jigsaw puzzle.";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
-;
-
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
     "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
@@ -443,10 +435,107 @@ The bathroom door is on the north wall. <<end>>"
     notImportantMsg = 'I don\'t think you want to go in there, it sounds like bad things are happening'
     isHidden = true
 ;
-end: DarkRoom 'The end'
-  "This is the end"
-  east = atrium
+end: Room 'Control Center'
+  "You are in the station control center, with blank monitors and keypads lining the walls. A strange assortment of robotic entities stand around the room.<.p>
+
+We are the galactic puzzle council. We have grown tired of artfully working puzzles into your adventure, so we have brought you here to face your final tests"
+  solved = 0
+  win {
+    "</p> The robots turn to you and say in chorus <q>You have triumphed over every obstacle we set in front of you</q> intones the chorus of robots. <q>We destroyed the inhabitants of this station when they were unable to solve our arbitrary logic puzzles, and we were about to wipe out the rest of humanity. Those without puzzling abilities do not deserve to live, and our puzzle robot clan has vowed to exterminate the unworthy. You have restored our faith in the human race as a puzzling species with your mighty deeds, and so we will leave you in peace to improve your logical reasoning abilities. Now we must go, may you puzzle and propagate!</q>
+
+Well that was lame, you think. Then you pillage the hell out of the station and head back to your ship with a enough plunder to never work again. As you fly off in your ship to you next adventure, for some reason you think <q>Happy Birthday Michelle</q>";
+    finishGameMsg(ftVictory, []); 
+  }
 ;
+
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
+
+
+// Superman
+
++ superman : Person 'robot superman' 'superman robot'
+  "A strange robot, shaped like an update down triange and wearing the tattered remains of a superman outfit. "
+  properName = 'Superman' 
+  globalParamName = 'superman'
+  specialDesc = "A robot dressed like superman stands to one side"
+  isHim = true
+; 
+
+++ ConvNode 'supermanpuzzle'; 
+
++++ SpecialTopic
+  name = 'answer the puzzle'
+  keywordList = ['volcano']
+  topicResponse {
+      "Indeed, my heart rages like a volcano! ";
+    end.solved++;
+    if(end.solved == 2) end.win();
+  }
+; 
+
+++ supermanPuzzling : InConversationState
+  stateDesc = "Give him the puzzle answer" 
+  specialDesc = "Superman is talking to you"
+;
+
++++ supermanIdle : ConversationReadyState
+  stateDesc = "He's busy being sad"
+  specialDesc = "The superman robot stands trying to look noble, but he looks like a stiff breeze would topple his lopsided frame. "
+  isInitState = true
+;
+
+++++ HelloTopic, StopEventList
+  [
+    'Greetings earthling, there\'s a puzzle inside me, I can feel it<.convnode supermanpuzzle>'
+  ]
+; 
+
+// bug weirdo
+
++ bug : Person 'bug batman weirdo' 'weirdo'
+  "An unusual robot dressed in black and grey. It's got two little tufts on its head, and kind of looks like a bug or something, and it has an emblem on its chest that might be a bug or something. If this is some figure from ancient earth, its name has be lost in the mists of time. You decide to call it Bug Wierdo"
+  properName = 'Bug Weirdo' 
+  globalParamName = 'weirdo'
+  specialDesc = "An unusual robot dressed in black and grey leans in a corner looking sulky. It's got two little tufts on its head, and kind of looks like a bug or something. If this is some figure from ancient earth, its name has be lost in the mists of time. You decide to call it bug wierdo"
+  isHim = true
+; 
+
+++ ConvNode 'weirdopuzzle'; 
+
++++ SpecialTopic
+  name = 'answer the puzzle'
+  keywordList = ['firefly']
+  topicResponse {
+      "No, I'm a bat, I am the night! But that is the answer";
+    end.solved++;
+    if(end.solved == 2) end.win();
+  }
+; 
+
+++ weirdoPuzzling : InConversationState
+  stateDesc = "Give him the puzzle answer" 
+  specialDesc = "Bug weirdo is talking to you"
+;
+
++++ weirdoIdle : ConversationReadyState
+  stateDesc = "He's busy being sad"
+  specialDesc = "He makes a brodyface"
+  isInitState = true
+  a = 0
+;
+
+++++ HelloTopic, StopEventList
+  [
+    'I am the night! <.convnode weirdopuzzle>',
+    'Stahp it, am the night! <.convnode weirdopuzzle>'
+  ]
+; 
 
 //X ZCSA BLGO ZCO JKSO. OGOJAZCO WXVBRN, CZ ZCO FKXRN. AZK EZC'R EZ AZKJ QZI; X'SS NBZZR AZK. AZK VOR DO? TOSYZDO RZ RBO JZKVBCOYPN.
 //------------------------------------------------------------------------------
