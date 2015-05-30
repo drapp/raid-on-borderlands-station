@@ -53,13 +53,7 @@ a reinforced steel behemoth about four meters square. the rest of the hull is a 
 roomDescVerbose = nil
 ;
 
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
-;
+//me 
 
 + airlockDoor: LockableWithKey, Door 'large square steel station airlock' 'airlock'
     "This was the main entrance for individual human traffic in and out of the station. It's banged up, but no way you\'re prying this open. There's a keycard slot for entrance, wouldn't want anyone just wandering in here. "
@@ -205,7 +199,7 @@ up to the task. It makes no sense, there's no sign of a riot, a war, or
 depressurization. If not for the smell this room would probably still be
 habitable. Just bodies everywhere. You put the mystery out of your head and try
 to focus on the room itself.<.p>
-If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if picture.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
+If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
     south = airlockInnerDoorInside
     out asExit(south)
     roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
@@ -218,6 +212,13 @@ jigsaw puzzle.";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
 
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
     "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
@@ -225,13 +226,12 @@ jigsaw puzzle.";}
     notImportantMsg = 'Enough with the corpses already. This is supposed to be a birthday party!'
 ;
     
-+ picture: RoomPartItem, Thing 'rather bland picture/painting/landscape' 
-    'picture'
-    "It's a landscape, pleasantly executed enough, but of no great distinction
-    and definitely not worth the bother of stealing. "
++ holoscreen: RoomPartItem, Thing 'blank holoscreen/screen' 
+    'holoscreen'
+    "A screen that would normally show promotional images and safety warnings"
     
     initNominalRoomPartLocation = defaultWestWall
-    initSpecialDesc = "A rather bland painting hangs on the west wall. "
+    initSpecialDesc = "A blank holoscreen hangs on the west wall"
     isListed = (moved)
     
     bulk = 8
@@ -245,7 +245,7 @@ jigsaw puzzle.";}
             else
             {
                 safe.discover();
-                "Behind the picture is a safe built into the wall. ";
+                "Behind the holoscreen is a quantum safe built into the wall. As you jostle it, the screen flickers on, which is disconcerting given that it's not attached to a power source. Rather than cheery images of the station, however, it displays a weird grid and a series of statements about people you vaguely recognize as pre-scattering folk heroes.";
             }
         }
     }
@@ -254,7 +254,7 @@ jigsaw puzzle.";}
     {
         if(!safe.discovered)
         {
-            "Removing the painting from the wall reveals a safe behind. ";
+            "Removing the holoscreen from the wall reveals a safe behind. It also flickers on, which is disconcerting given that it's not attached to a power source. Rather than cheery images of the station, however, it displays a weird grid and a series of statements about people you vaguely recognize as pre-scattering folk heroes.";
             safe.discover();
         }
         inherited(newDest);
@@ -262,8 +262,8 @@ jigsaw puzzle.";}
 ;
 
 + safe: RoomPartItem, Hidden, CustomFixture, ComplexContainer 
-    'sturdy steel safe' 'safe'
-    "It's a sturdy steel safe with a single dial on its door. "
+    'quantum safe' 'safe'
+    "It's a quantum safe with a single entanglement dial on its door. "
     
     subContainer: ComplexComponent, IndirectLockable, OpenableContainer 
     { 
@@ -275,9 +275,9 @@ jigsaw puzzle.";}
         
     }
     
-    specialDesc = "A safe is built into the west wall. "
+    specialDesc = "A quantum safe is built into the west wall. "
     specialNominalRoomPartLocation = defaultWestWall
-    cannotTakeMsg = "It's firmly built into the wall; you can't budge it. "
+    cannotTakeMsg = "It's literally a part of the wall"
     
     discover()
     {
@@ -292,30 +292,30 @@ jigsaw puzzle.";}
     
 ;
 
-++ safeDoor:  Hidden, ContainerDoor '(safe) door' 'safe door'
-    "It has a circular dial attached to its centre. "         
+++ safeDoor:  Hidden, ContainerDoor '(safe) door' 'quantum safe door'
+    "It has an entanglement dial on its front. "         
 ;
 
 +++ safeDial: Hidden, Component,  NumberedDial 'circular dial*dials' 'dial'
-    "The dial can be turned to any number between <<minSetting>> and
+    "The entanglement dial can be tuned to any number between <<minSetting>> and
     <<maxSetting>>. It's currently at <<curSetting>>. "
     
     minSetting = 0
-    maxSetting = 99
-    curSetting = '35'
+    maxSetting = 9999
+    curSetting = '356'
     
     num1 = 0
     num2 = 0
-    correctCombination = 1589
+    correctCombination = 15893047
     
     makeSetting(val)
     {
         inherited(val);
         num2 = num1;
         num1 = toInteger(val);
-        if(100 * num2 + num1 == correctCombination)
+        if(10000 * num2 + num1 == correctCombination)
         {
-            "You hear a slight <i>click</i> come from the safe door. ";
+            "You hear a slight <i>bzzzzz</i> come from the safe door. ";
             safe.makeLocked(nil);
         }
         else if(!safe.isOpen)
@@ -323,35 +323,11 @@ jigsaw puzzle.";}
     }
 ;
 
+++ muonTransfusor: Thing 'muon transfuser'
+    'muon transfuser'
+    "the solution to all your muon transfusing needs"
 
-//------------------------------------------------------------------------------
-
-/* DEFINE A NEW VERB */
-
-DefineTAction(Rub)
-;
-
-VerbRule(Rub)
-    'rub' dobjList
-    : RubAction
-    verbPhrase = 'rub/rubbing (what)'
-;
-
-/* When creating a new verb, you'll want to modify the Thing class so as to provide
-   default handling for the command. The defaults specified here will be used except
-   on objects for which you define explicit handling of the command. */
-   
-modify Thing
-    dobjFor(Rub)
-    {
-        preCond = [touchObj]
-        action() { mainReport(okayRubMsg); }        
-    }
-    
-    okayRubMsg = '{You/he} rub{s} {the dobj/him} but not much happens as a
-        result. '
-    
-    shouldNotBreakMsg = 'Only amateurs go round breaking things unnecessarily. '    
+    subLocation = &subContainer
 ;
 
 //------------------------------------------------------------------------------
