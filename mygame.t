@@ -163,6 +163,14 @@ airlock: Room 'Airlock'
     
     north = airlockInnerDoor
 ;
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
+
 
 + corpse:Fixture, Container 'dead desicated corpse' 'corpse'
     "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror "
@@ -202,6 +210,7 @@ to focus on the room itself.<.p>
 If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
     south = airlockInnerDoorInside
     east = bay
+    west = eatery
     out asExit(south)
     roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
 elimiated during the imperial succession war a century prior, or you'd be
@@ -212,14 +221,6 @@ words are there in your head, but they're all scrambled up like some sort of
 jigsaw puzzle.";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
-
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
-;
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
     "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
@@ -381,7 +382,7 @@ android : Person 'sad android' 'android'
   ]
 ; 
 
-bay: Room 'Ship Bay'
+bay: DarkRoom 'Ship Bay'
   "The ship bay is fairly small, containing three corvette-class ships and a dozen or so shuttles."
 
   west = atrium
@@ -391,6 +392,48 @@ bay: Room 'Ship Bay'
   "It's just a regular old cube with hearts painted on the side"
 ; 
 
+robot : Person, Hidden 'antsy robot' 'robot'
+  @eatery
+  "A robot blocks your path. It's larger than the door, so you can't get around it, with a rectangular humanoid frame and circular head. It's making a pained face, squeezing its legs together and shuffles side to side."
+  properName = 'Antsy robot' 
+  globalParamName = 'robot'
+  isHim = true
+  specialDesc = "A robot is blocking your path. "
+  discovered = true
+; 
+
++ GiveShowTopic @catster
+  topicResponse
+  { 
+      "<q>Ah, that will do nicely!</q> the robot exclaims, and snatches the magazine from your hands. He crabwalks over to the bathroom door and hurridly scramles inside, slamming it behind him. ";
+  bathroom.discover();
+  robot.discovered = false;
+}
+; 
+
++ DefaultGiveShowTopic, ShuffledEventList
+  [
+    'No, that won\'t do at all. ',
+    'I don\'t know how it works for humans, but that won\'t work for me. ',
+    'I\'m confused how you think the mechanics of this work. '
+  ]
+; 
+
+
+eatery: DarkRoom 'Eatery'
+  "<<if robot.discovered>> You can see it's an eatery, but you can't make out any details. <<else>> This would have been a fairly seedy dive commisary at one point. In stark contrast to the workmanlike metal interiors of the rest of the staion, this place feature fake wood panelling, fake windows, and fake old timey charm. <<end>>"
+
+  east = atrium
+;
+
++ bathroom: Decoration 'bathroom' 'bathroom door'
+    "A bathroom door, with the picture of a robot on it"
+    
+    notImportantMsg = 'I don\'t think you want to go in there, it sounds like bad things are happening'
+    isHidden = true
+;
+
+//X ZCSA BLGO ZCO JKSO. OGOJAZCO WXVBRN, CZ ZCO FKXRN. AZK EZC'R EZ AZKJ QZI; X'SS NBZZR AZK. AZK VOR DO? TOSYZDO RZ RBO JZKVBCOYPN.
 //------------------------------------------------------------------------------
 
 DefineIAction(FiatLux)
