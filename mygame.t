@@ -68,11 +68,9 @@ roomDescVerbose = nil
     makeOpen(stat)
     {
         inherited(stat);
-        if(stat)
-            achievement.awardPointsOnce();
+        "You insert the keycard and a green light blinks. That's a relief, you had other options for entering the station, but none of them good";
     }
     
-    achievement: Achievement { +10 "opening the airlock door" }
         
 ;
 
@@ -181,7 +179,7 @@ airlock: Room 'Airlock'
  actionDobjTake()      
 {
     inherited;
-    "Strange that he would have such an ancient artifact. This magazine looks terrible, a rare phystical remnant from the BuzzFeed cultural black hole of the early 21st century";
+    "Strange that he would have such an ancient artifact. This magazine looks terrible, a rare phystical remnant from the BuzzFeed Cultural Black Hole of the early 21st century";
 }
 ;
 
@@ -193,11 +191,7 @@ airlock: Room 'Airlock'
     makeOpen(stat)
     {
         inherited(stat);
-        if(stat)
-            achievement.awardPointsOnce();
     }
-    
-    achievement: Achievement { +10 "opening the airlock door" }
         
 ;
 
@@ -205,25 +199,30 @@ airlock: Room 'Airlock'
     "It's a steel airlock door"
 ;
 
-atrium: DarkRoom 'Study'
-    "This atrium is much as you would expect: somewhat spartan. A desk stands in
-    the middle of the room with a chair placed just behind it. A <<if
-      picture.moved>>safe is built into <<else>> rather bland painting hangs on
-    <<end>> the west wall. The way out is to the east. "
+atrium: DarkRoom 'The Atrium'
+    "The Atrium is a charnal house. You dearly hope your suit's air filters are
+up to the task. It makes no sense, there's no sign of a riot, a war, or
+depressurization. If not for the smell this room would probably still be
+habitable. Just bodies everywhere. You put the mystery out of your head and try
+to focus on the room itself.<.p>
+If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if picture.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station."
     south = airlockInnerDoorInside
     out asExit(south)
-    roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were elimiated during the imperial succession war a century prior, or you'd be worried right now.<.p>
-Your suit totally has a light on it, but for some reason, you're blanking on the voice command to activate it. Instead all you can think about is this weird puzzle labeled #2. ";}
+    roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
+elimiated during the imperial succession war a century prior, or you'd be
+worried right now.<.p> Your suit totally has a light on it, but for some
+reason, you just can't think of the voice command needed to activate it. That
+makes no sense, you use the command all the time. When you think about it, the
+words are there in your head, but they're all scrambled up like some sort of
+jigsaw puzzle.";}
 ;
 + airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
 
 
-+ CustomImmovable, Chair 'red office swivel chair' 'chair'
-    "It's a typical office swivel chair, covered in red fabric. "
++ corpse2: Decoration 'dead body corpse' 'corpse'
+    "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
     
-    cannotTakeMsg = 'You see no reason to burden yourself with such a useless
-        object; that would be quite unprofessional. '
-
+    notImportantMsg = 'Enough with the corpses already. This is supposed to be a birthday party!'
 ;
     
 + picture: RoomPartItem, Thing 'rather bland picture/painting/landscape' 
@@ -272,11 +271,8 @@ Your suit totally has a light on it, but for some reason, you're blanking on the
         makeOpen(stat)
         {
             inherited(stat);
-            if(stat)
-                achievement.awardPointsOnce();
         }
         
-        achievement: Achievement { +10 "opening the safe" }        
     }
     
     specialDesc = "A safe is built into the west wall. "
@@ -290,12 +286,10 @@ Your suit totally has a light on it, but for some reason, you're blanking on the
             foreach(local cur in allContents)
                 cur.discover();
             
-            achievement.awardPointsOnce();
         }
         inherited();
     }
     
-    achievement: Achievement { +5 "finding the safe" }
 ;
 
 ++ safeDoor:  Hidden, ContainerDoor '(safe) door' 'safe door'
@@ -329,40 +323,6 @@ Your suit totally has a light on it, but for some reason, you're blanking on the
     }
 ;
 
-++ orb: Thing 'ultimate battered dull metal orb/sphere/ball/satisfaction' 
-    'Orb of Ultimate Satisfaction'
-    "It doesn't look much be honest, just a battered sphere made of some dull
-    metal, but you've been told it's the most valuable and desirable object 
-    in the known universe! "
-    
-    aName = (theName)
-    
-    subLocation = &subContainer
-    
-    okayRubMsg = 'As {you/he} rub{s} {the dobj/him} a shimmering djiin suddenly
-        appears in the air before you!\b 
-        <q>Hello, you have reached the automated holographic answering service
-        of Jeannie the Genie,</q> she announces. <q>I\'m sorry I\'m not
-        available to respond to your rub in person right now, but my hours of
-        activity have been heavily curtailed by the European Working Time
-        Directive. Before making a wish, please make sure that you have
-        conducted a full risk assessment in line with the latest Health and
-        Safety Guidelines. Also, please note that before any wish can be granted
-        you must sign a Form P45/PDQ/LOL indemnifying this wish-granting agency
-        against any consequential loss or damage arising from the fulfilment of
-        your desires. Thank you for rubbing. Have a nice day!</q>\b
-        Her message complete, the holographic djiin fades away into
-        non-existence. '
-    
-    moveInto(dest)
-    {
-        inherited(dest);
-        if(dest.isOrIsIn(me))
-            achievement.awardPointsOnce();
-    }
-    
-    achievement: Achievement { +10 "taking the orb" }
-;
 
 //------------------------------------------------------------------------------
 
@@ -406,7 +366,7 @@ DefineIAction(FiatLux)
   }
   else
   {
-    "You switch your suit light on. ";
+    "You switch your suit light off. ";
     gPlayerChar.brightness = 0;
   }
 }
