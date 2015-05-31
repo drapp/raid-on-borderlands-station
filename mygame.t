@@ -136,7 +136,7 @@ terminal : Actor 'terminal' 'terminal'
 
 ++ SpecialTopic
   name = 'say the passphrase'
-  keywordList = ['the', 'humans', 'are', 'prey']
+  keywordList = ['we', 'are', 'killing', 'humans']
   topicResponse {
       "PASSWORD ACCEPTED. DOOR UNLOCKED";
       stationDoor.makeLocked(nil);
@@ -158,10 +158,10 @@ terminal : Actor 'terminal' 'terminal'
 +++ HelloTopic, StopEventList
   [
     'A PASSPHRASE IS REQUIRED. \b
-     14-10-16\b
-     30-5-65\b
-     39-4-38\b
-     31-7-12\b<.convnode password-input>',
+     8-3-1\b
+     41-2-31\b
+     43-10-49\b
+     41-1-39\b<.convnode password-input>',
     'PLEASE GIVE THE PASSWORD <.convnode password-input>'
   ]
 ;
@@ -178,7 +178,7 @@ airlock: Room 'Airlock'
   initSpecialDesc = "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror. You're momentarily startled, but you expected this, and at least it's not gruesome. You don't see any obvious cause of death"
 ;
 
-++ catster: Hidden 'catster magazine' 'copy of Catster Magazine from Spring 2015'
+++ catster: Hidden 'catster magazine' 'copy of Catster Magazine from Summer 2015'
  actionDobjTake()      
 {
     inherited;
