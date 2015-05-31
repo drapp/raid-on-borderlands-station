@@ -54,6 +54,13 @@ roomDescVerbose = nil
 ;
 
 //me 
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
 
 + airlockDoor: LockableWithKey, Door 'large square steel station airlock' 'airlock'
     "This was the main entrance for individual human traffic in and out of the station. It's banged up, but no way you\'re prying this open. There's a keycard slot for entrance, wouldn't want anyone just wandering in here. "
@@ -216,6 +223,7 @@ words are there in your head, but they're all scrambled up like some sort of
 jigsaw puzzle.";}
 ;
 
+
 + stationDoorInside : Lockable, Door -> stationDoor 'door' 'door'; 
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
@@ -344,7 +352,7 @@ jigsaw puzzle.";}
 
 android : Person 'sad android' 'android'
   @bay
-  "A humanoid robot with an outsized head, conical hat protrusion, and a permanently sad expression. "
+  "A humanoid android with an outsized head, conical hat protrusion, and a permanently sad expression. "
   properName = 'Sad Android' 
   globalParamName = 'android'
   isHim = true
@@ -356,17 +364,17 @@ android : Person 'sad android' 'android'
   name = 'remind him of his heart'
   keywordList = ['companion', 'cube']
   topicResponse {
-      "<q>Yes, of course, the weighted companion cube, I loved that bit from Portal!</q> the robot exclaims, his permanently sad expression taking on a wistful cast. <q>Here, you should have this</q>. He takes a companion cube out of his chest and places it on the floor. ";
+      "<q>Yes, of course, the weighted companion cube, I loved that bit from Portal!</q> the android exclaims, his permanently sad expression taking on a wistful cast. <q>Here, you should have this</q>. He takes a companion cube out of his chest and places it on the floor. ";
    companionCube.discover();
   }
 ; 
 
 + DefaultGiveShowTopic, ShuffledEventList
   [
-    '<q>That won\'t fill the void</q> intones the robot<.convnode heart>',
+    '<q>That won\'t fill the void</q> intones the android<.convnode heart>',
     '<q>I think you ought to know I\'m feeling very depressed.</q><.convnode heart>',
-    '<q>What is this cupped cake?</q> says the robot in a German accent for some reason<.convnode heart>',
-    '<q>Thanks for noticing me</q> drones the robot in a gloomy voice.<.convnode heart>'
+    '<q>What is this cupped cake?</q> says the android in a German accent for some reason<.convnode heart>',
+    '<q>Thanks for noticing me</q> drones the android in a gloomy voice.<.convnode heart>'
   ]
 ; 
 
@@ -388,7 +396,7 @@ android : Person 'sad android' 'android'
   [
     'You cautiously approach the android, who doesn\'t react to you. <q>Hey!</q> you bark out. <q>What is your status? What happened here?</q><.p>
      The android\'s eyes flick up at you briefly, then sag back down <q>I seem to have lost my heart. I can\'t even remember what it was. I think I may have locked it away in a box</q><.convnode heart>',
-    '<q>Dammit robot, answer me!</q> you shout.<.p>
+    '<q>Dammit android, answer me!</q> you shout.<.p>
      <q>Without my heart, it\'s all meaningless</q> {the android/he} sobs.<.convnode heart> '
   ]
 ; 
@@ -409,7 +417,7 @@ robot : Person, Hidden 'antsy robot' 'robot'
   properName = 'Antsy robot' 
   globalParamName = 'robot'
   isHim = true
-  specialDesc = "A robot is blocking your path. "
+  specialDesc = "A robot is blocking your path. It's larger than the door, so you can't get around it, with a rectangular humanoid frame and circular head. It's making a pained face, squeezing its legs together and shuffles side to side."
   discovered = true
 ; 
 
@@ -428,6 +436,15 @@ robot : Person, Hidden 'antsy robot' 'robot'
     'No, that won\'t do at all. ',
     'I don\'t know how it works for humans, but that won\'t work for me. ',
     'I\'m confused how you think the mechanics of this work. '
+  ]
+; 
+
++ DefaultAnyTopic, ShuffledEventList
+  [
+    'I could use some help here',
+    'I\'ve been like this for years',
+    'Ohhh, dear...',
+    'Please, you know what I need'
   ]
 ; 
 
@@ -467,14 +484,6 @@ closet: DarkRoom 'vacuumba closet'
 } 
 }      
 ;
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
-;
-
 + closetDoorInside : Lockable, Door -> closetDoor 'door' 'door'; 
 
 //h
@@ -737,6 +746,24 @@ VerbRule(FiatLux)
   'fiat' 'lux'
   : FiatLuxAction
   verbPhrase = 'make/making light'
+; 
+
+DefineIAction(Fix)
+ execAction
+{
+  if(vacuumba.isIn(gPlayerChar) && muonTransfusor.isIn(gPlayerChar)) {
+      "The vacuumba beeps and boops happily, then hops from your hand and goes to the closet, which opens for it";
+      closetDoor.makeLocked(nil);
+  } else {
+    "Nothing to fix";
+  }
+}
+;
+
+VerbRule(Fix)
+  'fix'
+  : FixAction
+  verbPhrase = 'fix'
 ; 
 
 DefineIAction(Unlockus)
