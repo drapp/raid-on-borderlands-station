@@ -58,6 +58,7 @@ roomDescVerbose = nil
 + airlockDoor: LockableWithKey, Door 'large square steel station airlock' 'airlock'
     "This was the main entrance for individual human traffic in and out of the station. It's banged up, but no way you\'re prying this open. There's a keycard slot for entrance, wouldn't want anyone just wandering in here. "
     keyList = [keyCard]
+    initiallyLocked = true
     
     makeOpen(stat)
     {
@@ -163,6 +164,14 @@ airlock: Room 'Airlock'
     
     north = airlockInnerDoor
 ;
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
+
 
 + corpse:Fixture, Container 'dead desicated corpse' 'corpse'
     "The corpse of a station official is slumped against the side of the wall. His face stares at you with an expression of horror "
@@ -199,20 +208,12 @@ up to the task. It makes no sense, there's no sign of a riot, a war, or
 depressurization. If not for the smell this room would probably still be
 habitable. Just bodies everywhere. You put the mystery out of your head and try
 to focus on the room itself.<.p>
-If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, and to the south is the airlock leading out of the station. There's an air vent in the ceiling, but now that the station artificial gravity has take ahold of you, you can't just float up to it. "
+If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, the sort used by cleaning robots, and to the south is the airlock leading out of the station. "
     south = airlockInnerDoorInside
     east = bay
     west = eatery
+    north = closetDoor
     out asExit(south)
-    up : TravelMessage 
-{  ->end
-    "Standing on the companion cube you manage to haul yourself into an airshaft"
-        canTravelerPass(traveler) 
-        { return traveler.isIn(companionCube) && traveler.posture==standing; }
-    explainTravelBarrier(traveler) 
-    { "You're a few inches short of grabbing the edge of the airshaft, even when jumping. "; } 
-}      
-  north : FakeConnector {"It's not only locked, but it seems to be welded shut. "} 
     roomDarkDesc {"It's pitch black. Fortunately the last of the Grues were
 elimiated during the imperial succession war a century prior, or you'd be
 worried right now.<.p> Your suit totally has a light on it, but for some
@@ -332,6 +333,23 @@ jigsaw puzzle.";}
     subLocation = &subContainer
 ;
 
++ closetDoorInside : Lockable, Door -> closetDoor 'door' 'door'; 
++ closetDoor: IndirectLockable, Door 'alumninum door' 'closet door'
+    "A door for janitor robots to park themselves and recharge"
+    
+    initiallyLocked = true
+    makeOpen(stat)
+    {
+        inherited(stat);
+        "The door opens for the vacuumba and you immediately wedge it open. ";
+    }
+        
+;
+
++ Enterable -> closet 'aluminum door' 'close door'
+    "It's a closet door for cleaning robots"
+;
+
 android : Person 'sad android' 'android'
   @bay
   "A humanoid robot with an outsized head, conical hat protrusion, and a permanently sad expression. "
@@ -408,7 +426,8 @@ robot : Person, Hidden 'antsy robot' 'robot'
   { 
       "<q>Ah, that will do nicely!</q> the robot exclaims, and snatches the magazine from your hands. He crabwalks over to the bathroom door and hurridly scramles inside, slamming it behind him. ";
   bathroom.discover();
-  robot.discovered = false;
+  robot.discovered = nil;
+  vacuumba.discover();
 }
 ; 
 
@@ -429,12 +448,38 @@ The bathroom door is on the north wall. <<end>>"
   east = atrium
 ;
 
++ vacuumba: Thing, Hidden 'roomba robot vacuumba' 'vacummba'
+  "This little fellow vacuums the floor, does your laundry, styles your hair, makes breakfast, and who knows what else. <<if broken>>It appears to be broken, a heartbreaking lack of muons. If you had a muon transfuser you could fix it, those cost a fortune; no one would just leave one lying around. <<else>> It's beeping and booping happily, looks like it wants to be charged. <<end>>"
+  broken = true
+  specialDesc = "A vacuumba lies on the floor. "
+;
+
 + bathroom: Decoration 'bathroom' 'bathroom door'
     "A bathroom door, with the picture of a robot on it"
     
     notImportantMsg = 'I don\'t think you want to go in there, it sounds like bad things are happening'
     isHidden = true
 ;
+
+closet: DarkRoom 'broom closet'
+  "A broom closet, filled with all manner of space broom. An air vent on the ceiling"
+    south = closetDoorInside
+    out asExit(south)
+    up : TravelMessage 
+{  ->end
+    "Standing on the companion cube you manage to haul yourself into an air vent"
+        canTravelerPass(traveler) 
+        { return traveler.isIn(companionCube) && traveler.posture==standing; }
+    explainTravelBarrier(traveler) 
+    { "You're a few inches short of grabbing the edge of the air vent, even when jumping. "; 
+} 
+}      
+;
+
+
+// END-------------------------------------------
+
+
 end: Room 'Control Center'
   "You are in the station control center, with blank monitors and keypads lining the walls. A strange assortment of robotic entities stand around the room.<.p>
 
@@ -447,14 +492,6 @@ We are the galactic puzzle council. We have grown tired of artfully working puzz
 Well that was lame, you think. Then you pillage the hell out of the station and head back to your ship with a enough plunder to never work again. As you fly off in your ship to you next adventure, for some reason you think <q>Happy Birthday Michelle</q>";
     finishGameMsg(ftVictory, []); 
   }
-;
-
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
 ;
 
 
