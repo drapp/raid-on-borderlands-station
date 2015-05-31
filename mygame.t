@@ -132,7 +132,7 @@ terminal : Actor 'terminal' 'terminal'
   keywordList = ['the', 'humans', 'are', 'prey']
   topicResponse {
       "PASSWORD ACCEPTED. DOOR UNLOCKED";
-      airlockInnerDoor.makeLocked(nil);
+      stationDoor.makeLocked(nil);
   }
 ; 
  
@@ -162,14 +162,7 @@ terminal : Actor 'terminal' 'terminal'
 airlock: Room 'Airlock'
     "You are in the airlock, which is at the southern edge of the station according to local geography. The walls are boring and metalic, with pump nozzels in the corners to pump air in and out. "
     
-    north = airlockInnerDoor
-;
-+ me: Actor
-    pcDesc = "Stella Nova"
-;
-
-++ Container 'large white space bag*bags' 'space bag'
-    "a bag, but in spaaace"
+    north = stationDoor
 ;
 
 
@@ -188,7 +181,7 @@ airlock: Room 'Airlock'
 
 + airlockDoorInside : Lockable, Door -> airlockDoor 'door' 'door'; 
 
-+ airlockInnerDoor: IndirectLockable, Door 'large square steel station airlock' 'airlock'
++ stationDoor: IndirectLockable, Door 'large square steel station airlock' 'airlock'
     "The airlock inner door is all that stands between you and the station"
     
     makeOpen(stat)
@@ -198,7 +191,7 @@ airlock: Room 'Airlock'
         
 ;
 
-+ Enterable -> airlockInnerDoor 'large square steel station airlock' 'airlock'
++ Enterable -> stationDoor 'large square steel station airlock' 'airlock'
     "It's a steel airlock door"
 ;
 
@@ -209,7 +202,7 @@ depressurization. If not for the smell this room would probably still be
 habitable. Just bodies everywhere. You put the mystery out of your head and try
 to focus on the room itself.<.p>
 If not for the improptu morgue, the atrium would be an utterly mundane and functional room, laid out optimally for the business of station customs and security just like dozens of such places you'd seen on other stations. A marblish counter down the center of the room served as a staging ground from which piratical customs agents would perform the most heinous of tax crimes against ordinary citizens and outlanders wanting to conduct business with the station. To either side prim velvet ropes delinated neat queues, now push asckew by falling bodies. A <<if holoscreen.moved>>holoscreen lies on the ground next to a safe is built into <<else>> holoscreen hangs on <<end>>the west wall, thankfully shorted out and not displaying cheery tourism advertisements, which would have been too much in the circumstances. To the east is the ship bay where most traffic would have entered the station. To the west is some sort of eatery. To the north is a closed door, the sort used by cleaning robots, and to the south is the airlock leading out of the station. "
-    south = airlockInnerDoorInside
+    south = stationDoorInside
     east = bay
     west = eatery
     north = closetDoor
@@ -222,7 +215,8 @@ makes no sense, you use the command all the time. When you think about it, the
 words are there in your head, but they're all scrambled up like some sort of
 jigsaw puzzle.";}
 ;
-+ airlockInnerDoorInside : Lockable, Door -> airlockInnerDoor 'door' 'door'; 
+
++ stationDoorInside : Lockable, Door -> stationDoor 'door' 'door'; 
 
 + corpse2: Decoration 'dead body corpse' 'corpse'
     "Corpses are littered about the place, a wide swath of ex-humanity all all manner of military and civilian wear. There's no blood, no signs of stuggle, but it's a grizzly sight nonetheless"
@@ -333,11 +327,9 @@ jigsaw puzzle.";}
     subLocation = &subContainer
 ;
 
-+ closetDoorInside : Lockable, Door -> closetDoor 'door' 'door'; 
+
 + closetDoor: IndirectLockable, Door 'alumninum door' 'closet door'
     "A door for janitor robots to park themselves and recharge"
-    
-    initiallyLocked = true
     makeOpen(stat)
     {
         inherited(stat);
@@ -461,12 +453,12 @@ The bathroom door is on the north wall. <<end>>"
     isHidden = true
 ;
 
-closet: DarkRoom 'broom closet'
-  "A broom closet, filled with all manner of space broom. An air vent on the ceiling"
+closet: DarkRoom 'vacuumba closet'
+  "A vacuumba closet, filled with all manner of vacuumba. An air vent on the ceiling. There's a big <q>h</q> on one wall, and a sudoku looking diagram on the other wall"
     south = closetDoorInside
     out asExit(south)
     up : TravelMessage 
-{  ->end
+{  ->shaft1
     "Standing on the companion cube you manage to haul yourself into an air vent"
         canTravelerPass(traveler) 
         { return traveler.isIn(companionCube) && traveler.posture==standing; }
@@ -475,6 +467,105 @@ closet: DarkRoom 'broom closet'
 } 
 }      
 ;
++ me: Actor
+    pcDesc = "Stella Nova"
+;
+
+++ Container 'large white space bag*bags' 'space bag'
+    "a bag, but in spaaace"
+;
+
++ closetDoorInside : Lockable, Door -> closetDoor 'door' 'door'; 
+
+//h
+shaft1: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaft2
+  south = shaftConfused
+  east = shaftConfused
+  west = shaftConfused
+  down = closet
+;
+
+//c
+shaft2: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaftConfused
+  south = shaftConfused
+  east = shaft3
+  west = shaftConfused
+  down = closet
+;
+
+//f
+shaft3: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaft4
+  south = shaftConfused
+  east = shaftConfused
+  west = shaftConfused
+  down = closet
+;
+
+//i
+shaft5: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaftConfused
+  south = shaftConfused
+  east = shaft6
+  west = shaftConfused
+  down = closet
+;
+
+//g
+shaft6: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaft7
+  south = shaftConfused
+  east = shaftConfused
+  west = shaftConfused
+  down = closet
+;
+
+//f
+shaft7: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaft8
+  south = shaftConfused
+  east = shaftConfused
+  west = shaftConfused
+  down = closet
+;
+
+//b
+shaft8: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaftConfused
+  south = shaftConfused
+  east = end
+  west = shaftConfused
+  down = closet
+;
+
+//a
+shaft4: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. " 
+  north = shaftConfused
+  south = shaftConfused
+  east = shaft5
+  west = shaftConfused
+  down = closet
+;
+
+shaftConfused: Room 'air shaft'
+  "You're in a nameless metalic air shaft with exits on all four sides. you could also probably kick down into whatever lies below. You feel a bit strange and dizzy, it's hard to keep track of where you are. "
+  north = shaftConfused
+  south = shaftConfused
+  east = shaftConfused
+  west = shaftConfused
+  down = closet
+;
+
 
 
 // END-------------------------------------------
@@ -646,4 +737,17 @@ VerbRule(FiatLux)
   'fiat' 'lux'
   : FiatLuxAction
   verbPhrase = 'make/making light'
+; 
+
+DefineIAction(Unlockus)
+ execAction
+{
+      closetDoor.makeLocked(nil);
+}
+;
+
+VerbRule(Unlockus)
+  'unlockus'
+  : UnlockusAction
+  verbPhrase = 'just unlock the door'
 ; 
