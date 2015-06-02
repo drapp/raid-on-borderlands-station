@@ -9,7 +9,7 @@ versionInfo: GameID
     htmlByline = 'by <a href="mailto:douglas.rapp@gmail.com">
                   Douglas Rapp</a>'
     version = '1'
-    authorEmail = 'Douglas Rapp<douglas.rapp@gmai.com>'
+    authorEmail = 'Douglas Rapp<douglas.rapp@gmail.com>'
     desc = 'Escape the space cafe using external paper puzles'
     htmlDesc = 'Escape the space cafe using external paper puzles'
 ;
@@ -154,6 +154,8 @@ terminal : Actor 'terminal' 'terminal'
   stateDesc = "The terminal is blank"
   isInitState = true
 ;
+
+// PUZZLE This is a book cypher using the magazine in the corpse, but the magazine has be read in real life. In the likely event that you don't have Catster magazine on hand, it's easy to generate this from any book or paper, finding the words for your phrase and referencing them page-paragraph-word or something. Just don't use anything you're too fond of, since the in-game magazine gets used for toilet paper later.
 
 +++ HelloTopic, StopEventList
   [
@@ -302,6 +304,8 @@ jigsaw puzzle.";}
     "It has an entanglement dial on its front. "         
 ;
 
+// PUZZLE: references tbd.pdf, key.pdf, and 15893047.pdf. Solve the logic puzzle, match the answers up with the key and get an 8 digit number. This puzzle turned out to be way too hard for the time available
+
 +++ safeDial: Hidden, Component,  NumberedDial 'circular dial*dials' 'dial'
     "The entanglement dial can be tuned to any number between <<minSetting>> and
     <<maxSetting>>. It's currently at <<curSetting>>. "
@@ -360,6 +364,8 @@ android : Person 'sad android' 'android'
 
 + ConvNode 'heart'; 
 
+// PUZZLE: this was just a box locked with a wire toy with a companion cube inside. The particular wire turned out to be way too hard and people just tangled it further.
+
 ++ SpecialTopic
   name = 'remind him of his heart'
   keywordList = ['companion', 'cube']
@@ -410,6 +416,8 @@ bay: DarkRoom 'Ship Bay'
 + companionCube : Chair, Hidden 'weighted companion cube' 'companion cube'
   "It's just a regular old cube with hearts painted on the side"
 ; 
+
+// PUZZLE: this one is straight up adventure game stuff, but at this point that was unexpected to people
 
 robot : Person, Hidden 'antsy robot' 'robot'
   @eatery
@@ -470,6 +478,8 @@ The bathroom door is on the north wall. <<end>>"
     isHidden = true
 ;
 
+// PUZZLE: fix the vacuumba with the muon transfuser to get into the closet, then stand on the cube to get into the vent. The fix command kind of sucks
+
 closet: DarkRoom 'vacuumba closet'
   "A vacuumba closet, filled with all manner of vacuumba. An air vent on the ceiling. There's a big <q>h</q> on one wall, and a sudoku looking diagram on the other wall"
     south = closetDoorInside
@@ -485,6 +495,8 @@ closet: DarkRoom 'vacuumba closet'
 }      
 ;
 + closetDoorInside : Lockable, Door -> closetDoor 'door' 'door'; 
+
+// PUZZLE: solve the sudoku in hcfaigfbh.pdf then use the string hcfaigfbh as a map to get through here. No on solve the sudoke and the random string confused them
 
 //h
 shaft1: Room 'air shaft'
@@ -595,6 +607,8 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
 ;
 
 
+// PUZZLE: these were just word scrambles hidden in physical dolls of the creatures
+
 // Superman
 
 + superman : Person 'robot superman' 'superman robot'
@@ -681,6 +695,8 @@ Well that was lame, you think. Then you pillage the hell out of the station and 
     'Stahp it, am the night! <.convnode weirdopuzzle>'
   ]
 ; 
+
+// PUZZLE a crypoquote. this one is just overkill, no one got anywhere near here
 
 // space marine
 
