@@ -1,6 +1,6 @@
 # Raid on Borderlands Station
 
-A crossover adventure/puzzle game made for a birthday parth in May 2015. The
+A crossover adventure/puzzle game made for a birthday party in May 2015. The
 adventure game references independent puzzles that exists in the real world can
 be working on parallel to the game, making it a group activity. Not sure how useful this will be to anyone, but it's a functional Tads3 adventure game, and there weren't a huge number of easily accessible examples when I wrote this.
 
